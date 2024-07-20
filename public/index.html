@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+  <!-- Definición del juego de caracteres -->
+  <meta charset="utf-8">
+  <!-- Especificación para IE sobre la compatibilidad -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <!-- Configuración de la escala inicial para dispositivos móviles -->
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <!-- Enlace al ícono del sitio -->
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  <!-- Título de la página obtenido de las opciones de htmlWebpackPlugin -->
+  <title>
+    <%= htmlWebpackPlugin.options.title %>
+  </title>
+</head>
+
+<body>
+  <!-- Mensaje para usuarios que tienen JavaScript deshabilitado -->
+  <noscript>
+    <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
+        Please enable it to continue.</strong>
+  </noscript>
+  <!-- Contenedor principal de la aplicación Vue.js -->
+  <div id="app"></div>
+  <!-- Los archivos generados se inyectarán automáticamente aquí -->
+</body>
+
+</html>
