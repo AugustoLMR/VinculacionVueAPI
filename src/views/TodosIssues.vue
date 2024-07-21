@@ -6,24 +6,11 @@
       <el-input placeholder="Todo" v-model="todo"></el-input>
     </form>
     
-    <!-- Todo display area -->
     <el-row :gutter="12">
       <TodoItem v-for="(todo, index) in todos" :key="index" :todo="todo" :index="index" @remove="removeTodo" />
+      <TodoItem v-for="(issue, index) in issues" :key="issue.id" :issue="issue" :index="index" @remove="closeIssue" />
     </el-row>
-    
-    <!-- GitHub Issues display area -->
-    <el-row :gutter="12">
-      <el-col :span="12" v-for="(issue, index) in issues" :key="issue.id">
-        <el-card class="box-card" shadow="hover" style="margin: 5px 0;">
-          <el-row :gutter="12">
-            <el-col :span="21">{{ issue.title }}</el-col>
-            <el-col :span="3">
-              <el-button @click="closeIssue(index)" type="success" icon="el-icon-check" circle></el-button>
-            </el-col>
-          </el-row>
-        </el-card>
-      </el-col>
-    </el-row>
+
   </div>
 </template>
 
@@ -36,7 +23,7 @@ const client = axios.create({
   headers: {
     'Authorization': `token ${process.env.VUE_APP_GITHUB_TOKEN}`,
     'Accept': 'application/vnd.github.v3+json',
-    'Content-Type':'application/json',
+    'Content-Type': 'application/json',
   },
 })
 
@@ -48,43 +35,43 @@ export default {
   data () {
     return {
       todo: '',
-      todos: [],
-      issues: []
+      todos: [], // Array to store local todos
+      issues: [] // Array to store GitHub issues
     }
   },
   methods: {
     addTodo() {
-      this.todos.push(this.todo);
-      this.todo = '';
+      this.todos.push(this.todo); // Adds a new todo to the local todos array
+      this.todo = ''; // Clears the input field after adding
     },
     removeTodo(index) {
-      this.todos.splice(index, 1);
+      this.todos.splice(index, 1); // Removes a todo from the local todos array
     },
     closeIssue(index) {
-      const target = this.issues[index];
+      const target = this.issues[index]; // Retrieves the targeted GitHub issue
       client.patch(`/issues/${target.number}`, {
-        state: 'closed'
+        state: 'closed' // Sends a PATCH request to GitHub API to close the issue
       }).then(() => {
-        this.issues.splice(index, 1);
+        this.issues.splice(index, 1); // Removes the closed issue from the issues array
       }).catch(error => {
-        console.error('Error closing issue:', error);
+        console.error('Error closing issue:', error); // Logs error if closing issue fails
       });
     },
     getIssues() {
       client.get('issues', {
-        state: 'open'
+        state: 'open' // Retrieves open issues from GitHub API
       })
         .then((res) => {
-          this.issues = res.data;
-          console.log('Issues response:', res.data);
+          this.issues = res.data; // Updates the issues array with fetched data
+          console.log('Issues response:', res.data); // Logs the fetched issues
         })
         .catch(error => {
-          console.error('Error fetching issues:', error);
+          console.error('Error fetching issues:', error); // Logs error if fetching issues fails
         });
     }
   },
   created() {
-    this.getIssues();
+    this.getIssues(); // Calls getIssues method when component is created to fetch GitHub issues
   }
 }
 </script>
